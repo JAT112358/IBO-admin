@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="IBO-admin" default="run" basedir=".">
+    <!-- project directories -->
+    <property environment="env"/>
+	<property name="source.dir" location="src"/>
+   	<property name="build.dir" location="bin"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="server.port" value="1099"/> 
+	<property name="server.IP" value="127.0.0.1"/> 
+	<property name="server.Name" value="iboAdmin"/>
+	<property name="policy.file" location="security/java.policy"/>
+	
+    <!-- Classpath -->
+     <path id="classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${build.dir}"/>    	
+    </path>
+     
+	<target name="build" description="Builds the project">
+		<delete dir="${build.dir}"/>
+		<mkdir dir="${build.dir}"/>
+		<javac srcdir="${source.dir}" destdir="${build.dir}" classpathref="classpath" deprecation="true" fork="true" includeAntRuntime="no"/>
+    </target>
+
+	<target name="run" depends="build" description="Runs the Administrator">
+		<java classname="controller.Controller" classpathref="classpath" fork="true">
+			<jvmarg value="-Djava.security.policy=${policy.file}"/>
+			<jvmarg value="-Xmx1024m"/>		
+        	<arg value="${server.IP}"/>
+	 		<arg value="${server.port}"/> 
+			<arg value="${server.Name}"/> 
+        </java>
+    </target>
+</project>
